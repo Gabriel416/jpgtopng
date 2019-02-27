@@ -1,11 +1,14 @@
-import React from "react";
+import Layout from "../components/Layout";
+import Navbar from "../components/Navbar";
+import FileConversion from "../containers/FileConversion";
 
-const App = () => {
+export default () => {
   return (
     <div>
-      <p>lorem</p>
+      <Layout>
+        <Navbar />
+        <FileConversion />
+      </Layout>
     </div>
   );
 };
-
-export default App;

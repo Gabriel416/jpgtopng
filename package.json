@@ -21,8 +21,10 @@
   },
   "homepage": "https://github.com/Gabriel416/jpgtopng#readme",
   "dependencies": {
+    "classnames": "^2.2.6",
     "next": "^8.0.3",
     "react": "^16.8.3",
-    "react-dom": "^16.8.3"
+    "react-dom": "^16.8.3",
+    "react-dropzone": "^9.0.0"
   }
 }
