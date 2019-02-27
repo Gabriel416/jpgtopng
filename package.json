@@ -21,10 +21,14 @@
   },
   "homepage": "https://github.com/Gabriel416/jpgtopng#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.15",
+    "@fortawesome/free-solid-svg-icons": "^5.7.2",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "classnames": "^2.2.6",
     "next": "^8.0.3",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-dropzone": "^9.0.0"
-  }
+  },
+  "devDependencies": {}
 }
