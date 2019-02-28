@@ -1,18 +1,54 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 import Upload from "../../components/Upload";
 import SelectInput from "../../components/SelectInput";
 import FinishedFile from "../../components/FinishedFile";
 
-export default () => {
+export default ({ firebase }) => {
   const [files, setFiles] = useState([]);
-  const [fromFile, setFromFile] = useState(null);
-  const [toFile, setToFile] = useState(null);
+  const [fromFile, setFromFile] = useState("JPG");
+  const [toFile, setToFile] = useState("PNG");
+
+  const processImage = uploadResponse => {
+    axios
+      .post(process.env.FIREBASE_CLOUD_IMAGE_API, {
+        imageData: uploadResponse,
+        fromFile,
+        toFile
+      })
+      .then(function(response) {
+        console.log(response, "RESPONSE");
+      })
+      .catch(function(error) {
+        console.log(error, "ERROR");
+      });
+    return;
+  };
+
   const onDrop = (acceptedFiles, rejectedFiles) => {
+    const storageRef = firebase.storage().ref();
     console.log(acceptedFiles, "accepted files");
     setFiles(acceptedFiles);
+    acceptedFiles.forEach(file => {
+      console.log(file, "file");
+      const metaData = {
+        contentType: file.type,
+        size: file.size,
+        lastModified: `${new Date(file.lastModified).toLocaleDateString(
+          "en-US"
+        )} ${new Date(file.lastModified).toLocaleTimeString("en-US")}`
+      };
+      storageRef
+        .child(file.name)
+        .put(file, metaData)
+        .then(res => {
+          processImage(res);
+        });
+    });
+
     // Do something with files
   };
 
