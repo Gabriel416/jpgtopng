@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
@@ -7,33 +7,80 @@ import Upload from "../../components/Upload";
 import SelectInput from "../../components/SelectInput";
 import FinishedFile from "../../components/FinishedFile";
 
-export default ({ firebase }) => {
-  const [files, setFiles] = useState([]);
-  const [fromFile, setFromFile] = useState("JPG");
-  const [toFile, setToFile] = useState("PNG");
+const FileConversion = ({ firebase }) => {
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "setFiles": {
+        return {
+          files: {
+            ...state.files,
+            [action.payload.id]: action.payload
+          }
+        };
+      }
 
-  const processImage = uploadResponse => {
-    axios
-      .post(process.env.FIREBASE_CLOUD_IMAGE_API, {
-        imageData: uploadResponse,
-        fromFile,
-        toFile
-      })
-      .then(function(response) {
-        console.log(response, "RESPONSE");
-      })
-      .catch(function(error) {
-        console.log(error, "ERROR");
-      });
-    return;
+      case "updateFile": {
+        state.files[action.payload.id] = {
+          ...state.files[action.payload.id],
+          ...action.payload
+        };
+        return {
+          ...state
+        };
+      }
+
+      default: {
+        return state;
+      }
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, { files: {} });
+  const [fromFile, setFromFile] = useState("");
+  const [toFile, setToFile] = useState("");
+
+  useEffect(() => {
+    const currentDomain = window.location.hostname;
+    switch (currentDomain) {
+      case currentDomain:
+        setFromFile("JPG");
+        setToFile("PNG");
+        break;
+
+      default:
+        break;
+    }
+  }, []);
+
+  const processImage = async (fileMetaData, originalFile) => {
+    // process.env.FIREBASE_CLOUD_IMAGE_API
+    // http://localhost:5000/file-converter-bddf8/us-central1/processImage
+    const payload = JSON.stringify({
+      imageData: fileMetaData,
+      fromFile,
+      toFile
+    });
+
+    try {
+      const { data } = await axios.post(
+        process.env.FIREBASE_CLOUD_IMAGE_API,
+        payload,
+        {
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+      console.log("HIT 2");
+      return data[0].metadata;
+    } catch (err) {
+      throw new Error(err);
+    }
   };
 
   const onDrop = (acceptedFiles, rejectedFiles) => {
     const storageRef = firebase.storage().ref();
-    console.log(acceptedFiles, "accepted files");
-    setFiles(acceptedFiles);
     acceptedFiles.forEach(file => {
-      console.log(file, "file");
+      console.log(file, "FILE");
+      file.id = Date.now();
       const metaData = {
         contentType: file.type,
         size: file.size,
@@ -41,15 +88,47 @@ export default ({ firebase }) => {
           "en-US"
         )} ${new Date(file.lastModified).toLocaleTimeString("en-US")}`
       };
-      storageRef
-        .child(file.name)
-        .put(file, metaData)
-        .then(res => {
-          processImage(res);
-        });
-    });
 
-    // Do something with files
+      const task = storageRef.child(file.name).put(file, metaData);
+
+      task.on(
+        "state_changed",
+        snapshot => {
+          let uploadPercentage =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(uploadPercentage, "HIT 1");
+          dispatch({
+            type: "updateFile",
+            payload: {
+              ...file,
+              uploadPercentage
+            }
+          });
+        },
+        err => {
+          console.log(err, "ERR SNAPS");
+        },
+        () => {
+          // succesful upload
+          task.snapshot.ref
+            .getMetadata()
+            .then(metadata => processImage(metadata, file))
+            .then(processedImageData => {
+              dispatch({
+                type: "updateFile",
+                payload: {
+                  ...file,
+                  name: processedImageData.name,
+                  size: processedImageData.size,
+                  downloadUrl: processedImageData.mediaLink
+                }
+              });
+
+              console.log("HIT 3, URL");
+            });
+        }
+      );
+    });
   };
 
   return (
@@ -59,14 +138,25 @@ export default ({ firebase }) => {
         <Upload onDrop={onDrop} />
         <div>file types here</div>
         <div className="file-picker-wrapper">
-          <SelectInput onSelect={setFromFile} />
+          <SelectInput selectedFile={fromFile} onSelect={setFromFile} />
           <p>
             <FontAwesomeIcon style={{ fontSize: "24px" }} icon={faArrowRight} />
           </p>
-          <SelectInput onSelect={setToFile} />
+          <SelectInput selectedFile={toFile} onSelect={setToFile} />
         </div>
-        <div>download here</div>
+        {/* <div>download here</div> */}
       </section>
+      {state.files &&
+        Object.keys(state.files).map(fileIndex => {
+          let file = state.files[fileIndex];
+          console.log(file, "FILE IN RENDER HERERERERER");
+          return (
+            <div key={file.id}>
+              {file.name}
+              <p>helloooooo</p>
+            </div>
+          );
+        })}
       <style jsx>{`
         main {
           margin: 70px auto;
@@ -97,3 +187,5 @@ export default ({ firebase }) => {
     </main>
   );
 };
+
+export default FileConversion;

@@ -1,12 +1,24 @@
-export default ({ onSelect }) => {
+export default ({ selectedFile, onSelect }) => {
+  console.log(selectedFile, "selected file");
+  const fileOptions = ["JPG", "PNG"];
+
+  const renderSelectOptions = fileOptions => {
+    return fileOptions.map((fileOption, i) => {
+      return (
+        <option key={i} value={fileOption}>
+          {fileOption}
+        </option>
+      );
+    });
+  };
   return (
     <div>
       <select
         className="cs-select cs-skin-elastic"
         onChange={e => onSelect(e.target.value)}
+        value={selectedFile}
       >
-        <option value="JPG">JPG</option>
-        <option value="PNG">PNG</option>
+        {renderSelectOptions(fileOptions)}
       </select>
       <style jsx>{`
         select {

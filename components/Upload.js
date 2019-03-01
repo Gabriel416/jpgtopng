@@ -3,9 +3,9 @@ import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import Dropzone from "react-dropzone";
 import classnames from "classnames";
 
-export default ({ onDrop }) => {
+const Upload = ({ onDrop }) => {
   return (
-    <Dropzone onDrop={onDrop}>
+    <Dropzone onDrop={e => onDrop(e)}>
       {({ getRootProps, getInputProps, isDragActive }) => {
         return (
           <div
@@ -64,3 +64,5 @@ export default ({ onDrop }) => {
     </Dropzone>
   );
 };
+
+export default Upload;
