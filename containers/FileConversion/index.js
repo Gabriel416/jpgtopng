@@ -5,7 +5,7 @@ import axios from "axios";
 
 import Upload from "../../components/Upload";
 import SelectInput from "../../components/SelectInput";
-import FinishedFile from "../../components/FinishedFile";
+import FileResult from "../../components/FileResult";
 
 const FileConversion = ({ firebase }) => {
   const reducer = (state, action) => {
@@ -74,6 +74,13 @@ const FileConversion = ({ firebase }) => {
     } catch (err) {
       throw new Error(err);
     }
+  };
+
+  const renderResults = files => {
+    return Object.keys(files).map(fileIndex => {
+      const file = files[fileIndex];
+      return <FileResult file={file} key={file.id} />;
+    });
   };
 
   const onDrop = (acceptedFiles, rejectedFiles) => {
@@ -146,17 +153,7 @@ const FileConversion = ({ firebase }) => {
         </div>
         {/* <div>download here</div> */}
       </section>
-      {state.files &&
-        Object.keys(state.files).map(fileIndex => {
-          let file = state.files[fileIndex];
-          console.log(file, "FILE IN RENDER HERERERERER");
-          return (
-            <div key={file.id}>
-              {file.name}
-              <p>helloooooo</p>
-            </div>
-          );
-        })}
+      {Object.keys(state.files).length > 0 && renderResults(state.files)}
       <style jsx>{`
         main {
           margin: 70px auto;
