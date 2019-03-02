@@ -1,6 +1,9 @@
 import { useState, useEffect, useReducer } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faExpandArrowsAlt
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 import Upload from "../../components/Upload";
@@ -72,6 +75,7 @@ const FileConversion = ({ firebase }) => {
       console.log("HIT 2");
       return data[0].metadata;
     } catch (err) {
+      // return err;
       throw new Error(err);
     }
   };
@@ -113,7 +117,13 @@ const FileConversion = ({ firebase }) => {
           });
         },
         err => {
-          console.log(err, "ERR SNAPS");
+          dispatch({
+            type: "updateFile",
+            payload: {
+              ...file,
+              failed: true
+            }
+          });
         },
         () => {
           // succesful upload
@@ -132,6 +142,15 @@ const FileConversion = ({ firebase }) => {
               });
 
               console.log("HIT 3, URL");
+            })
+            .catch(err => {
+              dispatch({
+                type: "updateFile",
+                payload: {
+                  ...file,
+                  failed: true
+                }
+              });
             });
         }
       );

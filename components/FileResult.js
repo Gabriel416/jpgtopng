@@ -4,12 +4,11 @@ export default ({ file }) => {
   return (
     <div>
       <section className="file-result-wrapper">
-        {file.name}
         <ProgressBar file={file} />
       </section>
       <style jsx>{`
         .file-result-wrapper {
-          padding: 20px;
+          padding: 15px;
           margin: 20px 0px;
           border-radius: 5px;
           border: 2px solid rgba(56, 153, 236, 0);
