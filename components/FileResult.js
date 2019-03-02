@@ -1,8 +1,12 @@
+import ProgressBar from "../components/ProgressBar";
+
 export default ({ file }) => {
-  console.log(file, "FILE IN RENDER HERERERERER");
   return (
     <div>
-      <section className="file-result-wrapper">{file.name}</section>
+      <section className="file-result-wrapper">
+        {file.name}
+        <ProgressBar file={file} />
+      </section>
       <style jsx>{`
         .file-result-wrapper {
           padding: 20px;
