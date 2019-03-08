@@ -4,8 +4,14 @@ import Dropzone from "react-dropzone";
 import classnames from "classnames";
 
 const Upload = ({ onDrop }) => {
+  const acceptedFileTypes =
+    "image/x-png, image/png, image/jpg, image/jpeg, image/gif";
   return (
-    <Dropzone onDrop={e => onDrop(e)}>
+    <Dropzone
+      onDrop={e => onDrop(e)}
+      maxSize={31457280}
+      accept={acceptedFileTypes}
+    >
       {({ getRootProps, getInputProps, isDragActive }) => {
         return (
           <div
@@ -16,16 +22,22 @@ const Upload = ({ onDrop }) => {
           >
             <input {...getInputProps()} />
             {isDragActive ? (
-              <p>Drop files here...</p>
+              <div className="dropzone-content">
+                <FontAwesomeIcon
+                  style={{ fontSize: "72px", color: "#ccc" }}
+                  icon={faFileUpload}
+                />
+                <p>Drop files here...</p>
+              </div>
             ) : (
               <div className="dropzone-content">
                 <FontAwesomeIcon
-                  style={{ fontSize: "72px", color: "#e6e7e8" }}
+                  style={{ fontSize: "72px", color: "#ccc" }}
                   icon={faFileUpload}
                 />
                 <p>
                   Drag and drop your file(s) here,{" "}
-                  <span>or click to browse</span>
+                  <span>or click to browse.</span>
                 </p>
               </div>
             )}
@@ -35,9 +47,10 @@ const Upload = ({ onDrop }) => {
                 cursor: pointer;
                 height: 150px;
                 margin: 0 auto;
-                border: 6px dashed #e6e7e8;
+                border: 6px dashed #ccc;
                 border-radius: 5px;
                 padding: 10px;
+                transition: 0.3s ease;
               }
 
               .dropzone-content {
@@ -56,6 +69,11 @@ const Upload = ({ onDrop }) => {
               span {
                 text-decoration: underline;
                 color: #3899ec;
+              }
+
+              .dropzone:hover,
+              .dropzone--isActive {
+                border-color: #c1e4fe;
               }
             `}</style>
           </div>

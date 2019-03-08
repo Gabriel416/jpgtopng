@@ -66,7 +66,7 @@ const FileConversion = ({ firebase }) => {
 
     try {
       const { data } = await axios.post(
-        process.env.FIREBASE_CLOUD_IMAGE_API,
+        "http://localhost:5000/file-converter-bddf8/us-central1/processImage",
         payload,
         {
           headers: { "Content-Type": "application/json" }
@@ -116,7 +116,7 @@ const FileConversion = ({ firebase }) => {
             }
           });
         },
-        err => {
+        () => {
           dispatch({
             type: "updateFile",
             payload: {

@@ -1,5 +1,4 @@
 export default ({ selectedFile, onSelect }) => {
-  console.log(selectedFile, "selected file");
   const fileOptions = ["JPG", "PNG"];
 
   const renderSelectOptions = fileOptions => {

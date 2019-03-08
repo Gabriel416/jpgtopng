@@ -1,4 +1,5 @@
 import Head from "next/head";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 
 export default ({ children }) => (
   <div>

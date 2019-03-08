@@ -6,5 +6,21 @@
       "file": "static/chunks/0.js",
       "publicPath": "static/chunks/0.js"
     }
+  ],
+  "@fortawesome/fontawesome-svg-core/styles.css": [
+    {
+      "id": "./node_modules/@fortawesome/fontawesome-svg-core/styles.css",
+      "name": "./node_modules/@fortawesome/fontawesome-svg-core/styles.css",
+      "file": "static/chunks/styles.js",
+      "publicPath": "static/chunks/styles.js"
+    }
+  ],
+  "undefined": [
+    {
+      "id": 2,
+      "name": null,
+      "file": "static/chunks/styles.js",
+      "publicPath": "static/chunks/styles.js"
+    }
   ]
 }
