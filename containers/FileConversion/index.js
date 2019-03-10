@@ -57,9 +57,7 @@ const FileConversion = ({ firebase }) => {
     }
   }, []);
 
-  const processImage = (fileMetaData, originalFile) => {
-    // process.env.FIREBASE_CLOUD_IMAGE_API
-    // http://localhost:5000/file-converter-bddf8/us-central1/processImage
+  const processImage = fileMetaData => {
     const payload = JSON.stringify({
       imageData: fileMetaData,
       fromFile,
@@ -68,15 +66,10 @@ const FileConversion = ({ firebase }) => {
 
     return new Promise((resolve, reject) => {
       axios
-        .post(
-          "http://localhost:5000/file-converter-bddf8/us-central1/processImage",
-          payload,
-          {
-            headers: { "Content-Type": "application/json" }
-          }
-        )
+        .post(process.env.FIREBASE_CLOUD_IMAGE_API, payload, {
+          headers: { "Content-Type": "application/json" }
+        })
         .then(({ data }) => {
-          console.log(data, "res");
           resolve(data[0].metadata);
         })
         .catch(err => {
