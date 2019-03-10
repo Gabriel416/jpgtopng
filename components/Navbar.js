@@ -1,7 +1,26 @@
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFile } from "@fortawesome/free-solid-svg-icons";
+
 export default () => {
+  const [title, setTitle] = useState("");
+  useEffect(() => {
+    setTitle(
+      window.location.hostname
+        .split(".")
+        .slice(0, -1)
+        .join(".") || window.location.hostname
+    );
+  }, []);
   return (
     <nav>
-      <div className="logo">hello world</div>
+      <div className="logo">
+        <FontAwesomeIcon
+          style={{ fontSize: "40px", color: "#C1E4FE", marginLeft: "100px" }}
+          icon={faFile}
+        />
+        <span>{title}</span>
+      </div>
       <style jsx>{`
         nav {
           background: #ffffff;
@@ -34,6 +53,10 @@ export default () => {
           height: 100%;
           border-right: 1px solid #dfe5eb;
           border-right: none;
+        }
+
+        span {
+          margin-left: 15px;
         }
       `}</style>
     </nav>

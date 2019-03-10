@@ -162,7 +162,13 @@ const FileConversion = ({ firebase }) => {
 
   return (
     <main className="file-conversion-wrapper">
-      <h1>File Conversion App</h1>
+      <h1>
+        Convert your {fromFile} to {toFile} files completely free.
+      </h1>
+      <h3>
+        Simply upload your files below and wait for the file conversion to
+        complete to download (up to 50mb per upload).
+      </h3>
       <section>
         <Upload onDrop={onDrop} fromFile={fromFile} />
         <div className="file-picker-wrapper">
@@ -198,6 +204,14 @@ const FileConversion = ({ firebase }) => {
         @media screen and (max-width: 500px) {
           section {
             padding: 15px;
+          }
+
+          h1 {
+            font-size 1.4em;
+          }
+
+          h3 {
+            font-size: 0.9em;
           }
         }
       `}</style>

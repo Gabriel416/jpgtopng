@@ -9,6 +9,7 @@ const Index = () => {
   useEffect(() => {
     document.getElementsByTagName("html")[0].setAttribute("lang", "en");
   }, []);
+
   return (
     <Layout>
       <Navbar />

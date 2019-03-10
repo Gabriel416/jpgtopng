@@ -1,7 +1,30 @@
+import { useEffect } from "react";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import Head from "next/head";
+import ReactGA from "react-ga";
 
 const Layout = ({ children }) => {
+  useEffect(() => {
+    ReactGA.initialize(
+      [
+        {
+          trackingId: "UA-108879520-2",
+          gaOptions: {
+            name: "jpgtopng"
+          }
+        },
+        {
+          trackingId: "UA-108879520-3",
+          gaOptions: { name: "pngtojpg" }
+        }
+      ],
+      { debug: false, alwaysSendToDefaultTracker: false }
+    );
+    ReactGA.pageview(window.location.pathname + window.location.search, [
+      "jpgtopng",
+      "pngtojpg"
+    ]);
+  }, []);
   return (
     <div className="app-wrapper">
       <Head>
@@ -11,7 +34,16 @@ const Layout = ({ children }) => {
           name="Description"
           content="Convert your images from JPG to PNG or vice versa completely free."
         />
-        <title>File Conversion App</title>
+        <meta
+          property="og:title"
+          content="Convert JPG to PNG or Vice Versa/>"
+        />
+        <meta
+          property="og:description"
+          content="Convert your images from JPG to PNG or vice versa completely free."
+        />
+        <meta property="og:type" content="website" />
+        <title>Convert JPG to PNG or Vice Versa</title>
         <link
           rel="stylesheet"
           href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
