@@ -1,7 +1,7 @@
 import classnames from "classnames";
 
 export default ({ file }) => {
-  console.log(file, "file herererere");
+  //   console.log(file, "file herererere");
 
   const statusText = () => {
     if (file.failed) {

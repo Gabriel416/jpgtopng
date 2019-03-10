@@ -1,9 +1,6 @@
 import { useState, useEffect, useReducer } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRight,
-  faExpandArrowsAlt
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 import Upload from "../../components/Upload";
@@ -45,17 +42,22 @@ const FileConversion = ({ firebase }) => {
   useEffect(() => {
     const currentDomain = window.location.hostname;
     switch (currentDomain) {
-      case currentDomain:
+      case "jpgtopng.co":
         setFromFile("JPG");
         setToFile("PNG");
         break;
-
+      case "pngtojpg.co":
+        setFromFile("PNG");
+        setToFile("JPG");
+        break;
       default:
+        setFromFile("JPG");
+        setToFile("PNG");
         break;
     }
   }, []);
 
-  const processImage = async (fileMetaData, originalFile) => {
+  const processImage = (fileMetaData, originalFile) => {
     // process.env.FIREBASE_CLOUD_IMAGE_API
     // http://localhost:5000/file-converter-bddf8/us-central1/processImage
     const payload = JSON.stringify({
@@ -64,20 +66,23 @@ const FileConversion = ({ firebase }) => {
       toFile
     });
 
-    try {
-      const { data } = await axios.post(
-        "http://localhost:5000/file-converter-bddf8/us-central1/processImage",
-        payload,
-        {
-          headers: { "Content-Type": "application/json" }
-        }
-      );
-      console.log("HIT 2");
-      return data[0].metadata;
-    } catch (err) {
-      // return err;
-      throw new Error(err);
-    }
+    return new Promise((resolve, reject) => {
+      axios
+        .post(
+          "http://localhost:5000/file-converter-bddf8/us-central1/processImage",
+          payload,
+          {
+            headers: { "Content-Type": "application/json" }
+          }
+        )
+        .then(({ data }) => {
+          console.log(data, "res");
+          resolve(data[0].metadata);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   };
 
   const renderResults = files => {
@@ -87,10 +92,15 @@ const FileConversion = ({ firebase }) => {
     });
   };
 
-  const onDrop = (acceptedFiles, rejectedFiles) => {
+  async function asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+  }
+
+  const onDrop = async (acceptedFiles, rejectedFiles) => {
     const storageRef = firebase.storage().ref();
-    acceptedFiles.forEach(file => {
-      console.log(file, "FILE");
+    await asyncForEach(acceptedFiles, async file => {
       file.id = Date.now();
       const metaData = {
         contentType: file.type,
@@ -107,7 +117,6 @@ const FileConversion = ({ firebase }) => {
         snapshot => {
           let uploadPercentage =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(uploadPercentage, "HIT 1");
           dispatch({
             type: "updateFile",
             payload: {
@@ -124,36 +133,30 @@ const FileConversion = ({ firebase }) => {
               failed: true
             }
           });
-        },
-        () => {
-          // succesful upload
-          task.snapshot.ref
-            .getMetadata()
-            .then(metadata => processImage(metadata, file))
-            .then(processedImageData => {
-              dispatch({
-                type: "updateFile",
-                payload: {
-                  ...file,
-                  name: processedImageData.name,
-                  size: processedImageData.size,
-                  downloadUrl: processedImageData.mediaLink
-                }
-              });
-
-              console.log("HIT 3, URL");
-            })
-            .catch(err => {
-              dispatch({
-                type: "updateFile",
-                payload: {
-                  ...file,
-                  failed: true
-                }
-              });
-            });
         }
       );
+
+      try {
+        const { metadata } = await task;
+        const processedImageData = await processImage(metadata);
+        dispatch({
+          type: "updateFile",
+          payload: {
+            ...file,
+            name: processedImageData.name,
+            size: processedImageData.size,
+            downloadUrl: processedImageData.mediaLink
+          }
+        });
+      } catch (error) {
+        dispatch({
+          type: "updateFile",
+          payload: {
+            ...file,
+            failed: true
+          }
+        });
+      }
     });
   };
 
@@ -161,8 +164,7 @@ const FileConversion = ({ firebase }) => {
     <main className="file-conversion-wrapper">
       <h1>File Conversion App</h1>
       <section>
-        <Upload onDrop={onDrop} />
-        <div>file types here</div>
+        <Upload onDrop={onDrop} fromFile={fromFile} />
         <div className="file-picker-wrapper">
           <SelectInput selectedFile={fromFile} onSelect={setFromFile} />
           <p>
@@ -170,7 +172,6 @@ const FileConversion = ({ firebase }) => {
           </p>
           <SelectInput selectedFile={toFile} onSelect={setToFile} />
         </div>
-        {/* <div>download here</div> */}
       </section>
       {Object.keys(state.files).length > 0 && renderResults(state.files)}
       <style jsx>{`

@@ -3,14 +3,15 @@ import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import Dropzone from "react-dropzone";
 import classnames from "classnames";
 
-const Upload = ({ onDrop }) => {
+const Upload = ({ onDrop, fromFile }) => {
   const acceptedFileTypes =
-    "image/x-png, image/png, image/jpg, image/jpeg, image/gif";
+    fromFile === "JPG" ? "image/jpg, image/jpeg" : "image/x-png, image/png";
   return (
     <Dropzone
       onDrop={e => onDrop(e)}
-      maxSize={31457280}
+      maxSize={50457280}
       accept={acceptedFileTypes}
+      multiple={true}
     >
       {({ getRootProps, getInputProps, isDragActive }) => {
         return (
@@ -46,7 +47,7 @@ const Upload = ({ onDrop }) => {
               .dropzone {
                 cursor: pointer;
                 height: 150px;
-                margin: 0 auto;
+                margin: 0px auto 25px auto;
                 border: 6px dashed #ccc;
                 border-radius: 5px;
                 padding: 10px;
@@ -68,12 +69,26 @@ const Upload = ({ onDrop }) => {
 
               span {
                 text-decoration: underline;
-                color: #3899ec;
+                color: blue;
               }
 
               .dropzone:hover,
               .dropzone--isActive {
                 border-color: #c1e4fe;
+              }
+
+              @media screen and (max-width: 580px) {
+                .dropzone-content p {
+                  font-size: 14px;
+                  margin-top: 25px;
+                }
+              }
+
+              @media screen and (max-width: 450px) {
+                .dropzone-content p {
+                  font-size: 16px;
+                  margin-top: 25px;
+                }
               }
             `}</style>
           </div>

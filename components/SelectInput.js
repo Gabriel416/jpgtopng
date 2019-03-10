@@ -13,6 +13,7 @@ export default ({ selectedFile, onSelect }) => {
   return (
     <div>
       <select
+        aria-label="file selection input"
         className="cs-select cs-skin-elastic"
         onChange={e => onSelect(e.target.value)}
         value={selectedFile}
