@@ -93,6 +93,7 @@ const FileConversion = ({ firebase }) => {
 
   const onDrop = async (acceptedFiles, rejectedFiles) => {
     const storageRef = firebase.storage().ref();
+
     await asyncForEach(acceptedFiles, async file => {
       file.id = Date.now();
       const metaData = {
@@ -118,7 +119,8 @@ const FileConversion = ({ firebase }) => {
             }
           });
         },
-        () => {
+        err => {
+          console.log(err, "err");
           dispatch({
             type: "updateFile",
             payload: {
@@ -142,6 +144,7 @@ const FileConversion = ({ firebase }) => {
           }
         });
       } catch (error) {
+        console.error(error);
         dispatch({
           type: "updateFile",
           payload: {

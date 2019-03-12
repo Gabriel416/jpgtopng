@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prod": "NODE_ENV=production node server.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,9 @@
     "@zeit/next-css": "^1.0.1",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
+    "compression": "^1.7.3",
     "dotenv": "^6.2.0",
+    "express": "^4.16.4",
     "firebase": "^5.8.4",
     "next": "^8.0.3",
     "react": "^16.8.3",
