@@ -50,6 +50,14 @@ const FileConversion = ({ firebase }) => {
         setFromFile("PNG");
         setToFile("JPG");
         break;
+      case "www.jpgtopng.co":
+        setFromFile("JPG");
+        setToFile("PNG");
+        break;
+      case "www.pngtojpg.co":
+        setFromFile("PNG");
+        setToFile("JPG");
+        break;
       default:
         setFromFile("JPG");
         setToFile("PNG");

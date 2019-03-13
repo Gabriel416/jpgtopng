@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "now-build": "npm run build",
+    "now-start": "npm run start",
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "prod": "NODE_ENV=production node server.js"
+    "prod": "NODE_ENV=production node index.js"
   },
   "repository": {
     "type": "git",
@@ -36,7 +38,8 @@
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-dropzone": "^9.0.0",
-    "react-ga": "^2.5.7"
+    "react-ga": "^2.5.7",
+    "react-responsive-modal": "^3.6.0"
   },
   "devDependencies": {}
 }

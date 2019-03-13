@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "name": "jpgtopng",
+  "alias": ["jpgtopng.co", "pngtojpg.co", "www.jpgtopng.co", "www.pngtojpg.co"],
+  "builds": [{ "src": "next.config.js", "use": "@now/next" }]
+}

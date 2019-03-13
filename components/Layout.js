@@ -31,13 +31,14 @@ const Layout = ({ children }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="utf-8" />
         <meta
+          name="google-site-verification"
+          content="scLHat7SgnqWjlDdhQR0_u0VjSNw9lFncYK_DefGjRQ"
+        />
+        <meta
           name="Description"
           content="Convert your images from JPG to PNG or vice versa completely free."
         />
-        <meta
-          property="og:title"
-          content="Convert JPG to PNG or Vice Versa/>"
-        />
+        <meta property="og:title" content="Convert JPG to PNG for Free/>" />
         <meta
           property="og:description"
           content="Convert your images from JPG to PNG or vice versa completely free."
@@ -68,7 +69,7 @@ const Layout = ({ children }) => {
         />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
-        <title>Convert JPG to PNG or Vice Versa</title>
+        <title>Convert JPG to PNG Free</title>
         <link
           rel="stylesheet"
           href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
